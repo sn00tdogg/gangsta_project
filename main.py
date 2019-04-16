@@ -38,9 +38,7 @@ def load_dataset():
 
 def main():
     x, y = load_dataset()
-    #x = x/255
-    scaler = MinMaxScaler(feature_range=(0, 1))
-    rescaledX = scaler.fit_transform(x)
+    x = x/255
     print(x)
     x_train, x_test, y_train, y_test = train_test_split(rescaledX, y, test_size=0.2, random_state=42)
     CNN.run(x_train, x_test, y_train, y_test)
