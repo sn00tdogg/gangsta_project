@@ -1,6 +1,9 @@
 import numpy as np
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.svm import LinearSVC
 from skimage.color import rgb2gray
+from keras.utils import to_categorical
 import cv2
 import os
 import random
@@ -15,7 +18,7 @@ model_weights = 'model_weights.hdf5'
 
 def load_dataset(dir):
     images = np.zeros([7112, 20, 20, 3])
-    targets = np.zeros([7112, 26])
+    targets = np.zeros([7112])
     chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
              'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
     i = 0
@@ -26,7 +29,7 @@ def load_dataset(dir):
             img = cv2.imread(os.path.join(folder, filename))
             if img is not None:
                 images[j] = img
-                targets[j, i] = 1
+                targets[j] = i
                 j += 1
         i += 1
     return images, targets
@@ -42,8 +45,10 @@ def data_processing(x):
     return x
 
 
-def train(x, y, model_weights, trials=10):
+def train_cnn(x, y, model_weights, trials=10):
+    print('=== Convolution Neural Network ===')
     test_accuracy = np.zeros(trials)
+    y = to_categorical(y, 26)
     for i in range(trials):
         print('Training network ', i + 1)
         random_state = 100 + i
@@ -54,13 +59,28 @@ def train(x, y, model_weights, trials=10):
     print('Average test accuracy over ', trials, ' trials: ', np.mean(test_accuracy))
 
 
+def train_svm(x, y):
+    # Change this as it performs at 17% accuracy
+    print('=== SVM classification ===')
+    random_state = 100
+    x = x.reshape(len(x), 400)
+    # y = to_categorical(y, 26)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2,
+                                                        random_state=random_state,
+                                                        stratify=y)
+    clf = LinearSVC()
+    clf.fit(x_train, y_train)
+    y_pred = clf.predict(x_test)
+    print(accuracy_score(y_test, y_pred))
+
+
 def main(dir, model_weights):
     print('Loading data...')
     x, y = load_dataset(dir)
     print('Processing data..')
-    # data = DataProcessing(x, y)
     x = data_processing(x)
-    train(x, y, model_weights, 2)
+    train_svm(x, y)
+    train_cnn(x, y, model_weights)
     # network = CNN.CNN()
     # network.test(x, y, model_weights)
 
