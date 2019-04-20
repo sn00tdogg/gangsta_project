@@ -1,14 +1,9 @@
-import numpy as np
-
 from keras import Model
-from keras.layers import Input, Conv2D, Flatten, Dense, Dropout, MaxPooling2D, add, ReLU, BatchNormalization, \
-    concatenate
+from keras.layers import Input, Conv2D, Flatten, Dense, Dropout, MaxPooling2D, add, ReLU, BatchNormalization
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import load_model
-from skimage import feature
 from sklearn.model_selection import train_test_split
-
 
 
 class CNN:
@@ -18,7 +13,6 @@ class CNN:
 
     def network(self):
         input_img = Input(shape=self.input_shape)
-        input_edges = Input(shape=self.input_shape)
 
         def residual_layers(input_layer):
             y = Conv2D(64, kernel_size=(3, 3), strides=(1, 1), padding='same')(input_layer)
@@ -29,6 +23,7 @@ class CNN:
             y = ReLU()(y)
             y = add([y, input_layer])
             y = ReLU()(y)
+            y = MaxPooling2D(pool_size=(2, 2))(y)
             return y
 
         def branches(input_layer):
@@ -36,19 +31,17 @@ class CNN:
             y = ReLU()(y)
             # y = Conv2D(64, kernel_size=(3, 3), strides=(2, 2))(y)
             # y = ReLU()(y)
-            y = MaxPooling2D(pool_size=(2, 2))(y)
+            # y = MaxPooling2D(pool_size=(2, 2))(y)
+            y = residual_layers(y)
             y = residual_layers(y)
             # y = residual_layers(y)
-            # y = residual_layers(y)
-            y = MaxPooling2D(pool_size=(2, 2))(y)
+            # y = MaxPooling2D(pool_size=(2, 2))(y)
             y = BatchNormalization()(y)
             y = ReLU()(y)
             return Flatten()(y)
 
-        img = branches(input_img)
-        edg = branches(input_edges)
+        x = branches(input_img)
 
-        x = concatenate([img, edg])
         x = BatchNormalization()(x)
         x = Dense(128, activation='relu')(x)
         x = Dropout(0.5)(x)
@@ -56,23 +49,23 @@ class CNN:
         x = Dropout(0.5)(x)
         x = Dense(26, activation='softmax')(x)
 
-        model = Model(inputs=[input_img, input_edges], outputs=x)
+        model = Model(inputs=input_img, outputs=x)
         model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
         model.summary()
         return model
 
-    def train(self, img, edges, y):
+    def train(self, x, y, model_weights):
         early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=5, verbose=0, mode='auto')
-        mcp_save = ModelCheckpoint('model_weights.hdf5', save_best_only=True, monitor='val_loss', mode='min')
+        mcp_save = ModelCheckpoint(model_weights, save_best_only=True, monitor='val_loss', mode='min')
         callbacks = [early_stopping, mcp_save]
-        self.model.fit(x=[img, edges], y=y, epochs=50, batch_size=64, validation_split=0.1, verbose=2,
+        self.model.fit(x=x, y=y, epochs=50, batch_size=64, validation_split=0.1, verbose=2,
                        callbacks=callbacks)
 
-        model = load_model('model_weights.hdf5')
-        history = model.evaluate(x=[img, edges], y=y)
+        model = load_model(model_weights)
+        history = model.evaluate(x=x, y=y)
         print("Train loss: ", history[0], ", train accuracy: ", history[1])
 
-    def train_generator(self, img, edges, y):
+    def train_generator(self, x, y, model_weights):
         data_generator = ImageDataGenerator(featurewise_center=True,
                                             featurewise_std_normalization=True,
                                             rotation_range=90,
@@ -81,27 +74,26 @@ class CNN:
                                             horizontal_flip=True,
                                             zca_whitening=True)
         early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=5, verbose=0, mode='auto')
-        mcp_save = ModelCheckpoint('model_smooth_weights.hdf5', save_best_only=True, monitor='val_loss', mode='min')
+        mcp_save = ModelCheckpoint(model_weights, save_best_only=True, monitor='val_loss', mode='min')
         callbacks = [early_stopping, mcp_save]
-        img_train, img_val, y_train, y_val = train_test_split(img, y, test_size=0.1, random_state=42)
-        edges_train, edges_val = train_test_split(edges, test_size=0.1, random_state=42)
-        data_generator.fit(img_train)
-        self.model.fit_generator(data_generator.flow([img_train, edges_train], y_train, batch_size=32),
-                                 steps_per_epoch=len(img) / 32, epochs=100, callbacks=callbacks,
-                                 validation_data=([img_val, edges_val], y_val), verbose=2)
-        model = load_model('model_smooth_weights.hdf5')
-        history = model.evaluate(x=[img, edges], y=y)
+        x_train, x_val, y_train, y_val = train_test_split(x, y, test_size=0.1, random_state=42)
+        data_generator.fit(x_train)
+        self.model.fit_generator(data_generator.flow(x_train, y_train, batch_size=32),
+                                 steps_per_epoch=len(x) / 32, epochs=100, callbacks=callbacks,
+                                 validation_data=(x_val, y_val), verbose=2)
+        model = load_model(model_weights)
+        history = model.evaluate(x=x, y=y)
         print("Train loss: ", history[0], ", train accuracy: ", history[1])
 
-    def test(self, img, edges, y):
-        model = load_model('model_smooth_weights.hdf5')
-        history = model.evaluate(x=[img, edges], y=y)
+    def test(self, x, y, model_weights):
+        model = load_model(model_weights)
+        history = model.evaluate(x=x, y=y)
         print("Test loss: ", history[0], ", test accuracy: ", history[1])
         return history[1]
 
 
-def run(img_train, img_test, edges_train, edges_test, y_train, y_test):
+def run(x_train, x_test, y_train, y_test, model_weights):
     network = CNN()
-    network.train(img_train, edges_train, y_train)
-    test_accuracy = network.test(img_test, edges_test, y_test)
+    network.train(x_train, y_train, model_weights)
+    test_accuracy = network.test(x_test, y_test, model_weights)
     return test_accuracy
