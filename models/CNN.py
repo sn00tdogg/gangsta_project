@@ -1,13 +1,14 @@
 import numpy as np
 from keras import Model
-from keras.layers import Input, Conv2D, Flatten, Dense, Dropout, MaxPooling2D, add, ReLU, BatchNormalization
+from keras.layers import Input, Conv2D, Flatten, Dense, Dropout, MaxPooling2D, add, BatchNormalization
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import load_model
-from keras.utils import multi_gpu_model, to_categorical
+from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
 
-import data_processing
+from feature_extraction import data_processing
+import load_data
 
 
 class CNN:
@@ -71,13 +72,11 @@ class CNN:
         print("Train loss: ", history[0], ", train accuracy: ", history[1])
 
     def train_generator(self, x, y, model_weights):
-        data_generator = ImageDataGenerator(rotation_range=90,
+        data_generator = ImageDataGenerator(rotation_range=20,
                                             shear_range=0.2,
                                             zoom_range=0.2,
-                                            width_shift_range=5,
-                                            height_shift_range=5,
-                                            horizontal_flip=False,
-                                            zca_whitening=False,
+                                            width_shift_range=2,
+                                            height_shift_range=2,
                                             preprocessing_function=data_processing.invert_colors)
         early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=20, verbose=0, mode='auto')
         mcp_save = ModelCheckpoint(model_weights, save_best_only=True, monitor='val_loss', mode='min')
@@ -104,7 +103,7 @@ class CNN:
         return prediction
 
 
-def fit_cnn(x, y, model_weights, num_classes=26, trials=1):
+def fit_cnn(x, y, model_weights='model_weights.hdf5', num_classes=26, trials=1):
     print('=== Convolution Neural Network ===')
     test_accuracy = np.zeros(trials)
     y = to_categorical(y, num_classes)
@@ -122,3 +121,7 @@ def fit_cnn(x, y, model_weights, num_classes=26, trials=1):
         test_accuracy[i] = network.test(x_test, y_test, model_weights)
     print('Average test accuracy over ', trials, ' trials: ', np.mean(test_accuracy))
 
+
+if __name__ == "__main__":
+    img, target = load_data.load_dataset()
+    fit_cnn(img, target)

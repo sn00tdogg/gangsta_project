@@ -1,9 +1,7 @@
-from skimage import filters, feature
 import matplotlib.pyplot as plt
-import cv2 as cv
 import numpy as np
 
-import data_processing
+from feature_extraction import data_processing
 
 
 def plot_filters(x):
@@ -17,7 +15,6 @@ def plot_filters(x):
         ValueError('Not valid input')
     img = data_processing.scale_input(img)
     img = data_processing.grey_scale(img)
-    print(img.shape)
     fig, ax = plt.subplots(nrows=2, ncols=3, figsize=(8, 3),
                            sharex='all', sharey='all')
     ax[0, 0].imshow(img, cmap='gray')
