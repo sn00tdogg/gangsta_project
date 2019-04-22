@@ -20,8 +20,7 @@ import cv2
 import os
 import random
 
-import CNN
-from data_processing import DataProcessing
+from models import CNN
 
 random.seed(100)
 
