@@ -9,7 +9,7 @@ from keras.models import load_model
 from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
 
-from feature_extraction.data_processing import scale_input, add_dimension, grey_scale
+from feature_extraction.data_processing import scale_input, add_dimension, grey_scale, invert_colors
 from load_data import load_data_chars
 
 
@@ -79,7 +79,7 @@ class CNN:
                                             zoom_range=0.2,
                                             width_shift_range=2,
                                             height_shift_range=2,
-                                            preprocessing_function=data_processing.invert_colors)
+                                            preprocessing_function=invert_colors)
         early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=20, verbose=0, mode='auto')
         mcp_save = ModelCheckpoint(model_weights, save_best_only=True, monitor='val_loss', mode='min')
         callbacks = [early_stopping, mcp_save]

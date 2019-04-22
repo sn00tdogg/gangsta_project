@@ -1,0 +1,9 @@
+### Requirements ###
+#
+numpy
+keras
+opencv-python
+sklearn
+scikit-image
+matplotlib
+tensorflow
