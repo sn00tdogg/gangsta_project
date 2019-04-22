@@ -10,10 +10,10 @@
 |            |---- z
 |     |----- detection images  # Datasets requiered to do character detection
 |---- models
-|---- |---- CNN.py
-|---- |---- KNN.py
-|---- |---- SVM.py
-|---- |---- Naive_Bayes.py
+|     |---- CNN.py
+|     |---- KNN.py
+|     |--- SVM.py
+|     |---- Naive_Bayes.py
 |---- feature_extraction
 |---- character_classification.py
 |---- character_detection.py
