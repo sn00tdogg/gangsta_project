@@ -12,9 +12,11 @@
 |---- models
 |     |---- CNN.py
 |     |---- KNN.py
-|     |--- SVM.py
+|     |---- SVM.py
 |     |---- Naive_Bayes.py
 |---- feature_extraction
+|     |---- data_processing.py
+|     |---- filters.py
 |---- character_classification.py
 |---- character_detection.py
 |---- plots.py
