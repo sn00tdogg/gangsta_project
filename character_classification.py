@@ -1,15 +1,15 @@
 import random
 
 from models import Naive_Bayes, SVM, CNN, KNN
+from load_data import load_data_chars
 import plots
-import load_data
 
 random.seed(100)
 
 
 def character_classification():
     print('Loading data...')
-    x, y = load_data.load_dataset()
+    x, y = load_data_chars()
     print('Processing data..')
     print('Training data shape: ', x.shape)
     print('Test data shape: ', y.shape)

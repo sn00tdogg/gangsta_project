@@ -7,8 +7,8 @@ from keras.models import load_model
 from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
 
-from feature_extraction import data_processing
-import load_data
+from feature_extraction.data_processing import scale_input, add_dimension, grey_scale
+from load_data import load_data_chars
 
 
 class CNN:
@@ -107,9 +107,9 @@ def fit_cnn(x, y, model_weights='model_weights.hdf5', num_classes=26, trials=1):
     print('=== Convolution Neural Network ===')
     test_accuracy = np.zeros(trials)
     y = to_categorical(y, num_classes)
-    x = data_processing.scale_input(x)
-    x = data_processing.grey_scale(x)
-    x = data_processing.add_dimension(x)
+    x = scale_input(x)
+    x = grey_scale(x)
+    x = add_dimension(x)
     for i in range(trials):
         print('Training network ', i + 1)
         random_state = 100 + i
@@ -123,5 +123,5 @@ def fit_cnn(x, y, model_weights='model_weights.hdf5', num_classes=26, trials=1):
 
 
 if __name__ == "__main__":
-    img, target = load_data.load_dataset()
+    img, target = load_data_chars()
     fit_cnn(img, target)

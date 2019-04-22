@@ -2,31 +2,15 @@ from skimage.color import rgb2gray
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import cv2
-import os
 import random
 import numpy as np
 
 from models import CNN
+from load_data import load_data_detection
 
 random.seed(100)
 
-dir = 'dataset\detection-images'
 model_weights = 'model_weights.hdf5'
-
-
-def load_data(folder):
-    j = 0
-    img1 = None
-    img2 = None
-    for filename in os.listdir(folder):
-        img = cv2.imread(os.path.join(folder, filename))
-        if img is not None:
-            if j == 0:
-                img1 = img
-            else:
-                img2 = img
-            j += 1
-    return img1, img2
 
 
 def data_processing(x):
@@ -66,8 +50,8 @@ def slicing_window(img, model_weights):
     plt.show()
 
 
-def character_detection(folder, model_weights):
-    img1, img2 = load_data(folder)
+def character_detection(model_weights):
+    img1, img2 = load_data_detection()
     plt.imshow(img1)
     plt.show()
     img1 = data_processing(img1)
@@ -79,4 +63,4 @@ def character_detection(folder, model_weights):
 
 
 if __name__ == "__main__":
-    character_detection(dir, model_weights)
+    character_detection(model_weights)
