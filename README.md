@@ -1,5 +1,5 @@
 # gangsta_project
-## Folder structure required to run the project without any modifications:
+### Folder structure required to run the project without any modifications:
 
 ```bash
 |---- datasets
