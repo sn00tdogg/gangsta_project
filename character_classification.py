@@ -3,10 +3,7 @@ import cv2 as cv
 import os
 import random
 
-import data_processing
-import CNN
-import SVM
-import Naive_Bayes
+from models import Naive_Bayes, SVM, CNN
 import plots
 
 random.seed(100)
