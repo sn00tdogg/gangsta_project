@@ -5,8 +5,8 @@ from sklearn.neighbors import KNeighborsClassifier
 import data_processing
 
 
-def linear_svm(x, y):
-    print('=== Linear SVM classification ===')
+def knn(x, y):
+    print('=== KNN classification ===')
     random_state = 100
 
     # Data processing

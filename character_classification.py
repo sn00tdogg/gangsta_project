@@ -3,7 +3,7 @@ import cv2 as cv
 import os
 import random
 
-from models import Naive_Bayes, SVM, CNN
+from models import Naive_Bayes, SVM, CNN, KNN
 import plots
 
 random.seed(100)
@@ -41,8 +41,8 @@ def character_classification(dir, model_weights):
     SVM.linear_svm(x, y)
     SVM.svm(x, y)
     Naive_Bayes.naive_bayes(x, y)
-    # KNN.KNeighborsClassifier(x, y)
-    # CNN.fit(x, y, model_weights, trials=1)
+    KNN.knn(x, y)
+    CNN.fit_cnn(x, y, model_weights, trials=1)
 
 
 if __name__ == "__main__":

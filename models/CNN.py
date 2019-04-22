@@ -110,6 +110,7 @@ def fit_cnn(x, y, model_weights, num_classes=26, trials=1):
     y = to_categorical(y, num_classes)
     x = data_processing.scale_input(x)
     x = data_processing.grey_scale(x)
+    x = data_processing.add_dimension(x)
     for i in range(trials):
         print('Training network ', i + 1)
         random_state = 100 + i
