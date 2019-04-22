@@ -1,4 +1,6 @@
 import numpy as np
+import time
+
 from keras import Model
 from keras.layers import Input, Conv2D, Flatten, Dense, Dropout, MaxPooling2D, add, BatchNormalization
 from keras.callbacks import EarlyStopping, ModelCheckpoint
@@ -106,12 +108,14 @@ class CNN:
 def fit_cnn(x, y, model_weights='model_weights.hdf5', num_classes=26, trials=1):
     print('=== Convolution Neural Network ===')
     test_accuracy = np.zeros(trials)
+    running_time = np.zeros(trials)
     y = to_categorical(y, num_classes)
     x = scale_input(x)
     x = grey_scale(x)
     x = add_dimension(x)
     for i in range(trials):
         print('Training network ', i + 1)
+        start = time.time()
         random_state = 100 + i
         x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2,
                                                             random_state=random_state,
@@ -119,7 +123,10 @@ def fit_cnn(x, y, model_weights='model_weights.hdf5', num_classes=26, trials=1):
         network = CNN(num_classes)
         network.train_generator(x_train, y_train, model_weights)
         test_accuracy[i] = network.test(x_test, y_test, model_weights)
+        running_time[i] = time.time() - start
+        print('Running time: ', running_time[i])
     print('Average test accuracy over ', trials, ' trials: ', np.mean(test_accuracy))
+    print('Average running time over ', trials, ' trials: ', np.mean(running_time))
 
 
 if __name__ == "__main__":
