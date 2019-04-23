@@ -1,6 +1,6 @@
 # gangsta_project
 ## How to install requirements
-Create a environment
+Create a environment, activate and install requirements:
 ```bash
 conda create -n "name_of_environment" python=3.6
 conda activate "name_of_environment"
