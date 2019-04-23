@@ -28,8 +28,8 @@ class CNN:
             y = BatchNormalization()(y)
             y = Conv2D(64, kernel_size=(3, 3), strides=(1, 1), padding='same',
                        activation='relu')(y)
-            y = BatchNormalization()(y)
             y = add([y, input_layer])
+            y = BatchNormalization()(y)
             return y
 
         ######################
@@ -49,7 +49,7 @@ class CNN:
         ##########################
         # Fully connected layers #
         ##########################
-        x = Dense(128, activation='relu')(x)
+        x = Dense(512, activation='relu')(x)
         x = Dropout(0.5)(x)
         x = Dense(64, activation='relu')(x)
         x = Dropout(0.5)(x)

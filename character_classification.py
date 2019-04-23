@@ -14,11 +14,10 @@ def character_classification():
     print('Training data shape: ', x.shape)
     print('Test data shape: ', y.shape)
     plots.plot_filters(x[0])
-    SVM.linear_svm(x, y)
     SVM.svm(x, y)
     Naive_Bayes.naive_bayes(x, y)
     KNN.knn(x, y)
-    CNN.fit_cnn(x, y, trials=10)
+    CNN.fit_cnn(x, y, trials=1)
 
 
 if __name__ == "__main__":

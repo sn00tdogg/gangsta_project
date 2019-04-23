@@ -1,4 +1,4 @@
-from skimage.feature import hog
+import numpy as np
 import cv2 as cv
 from skimage import filters, feature
 
@@ -41,3 +41,15 @@ def add_bilateral_filter(x):
     else:
         x = cv.bilateralFilter(x, 2, 2, 15.)
     return x
+
+
+def add_otsu_filter(x):
+    if len(x) > 20:
+        binary = np.zeros(x.shape)
+        for i in range(len(x)):
+            threshold = filters.threshold_otsu(x[i])
+            binary[i] = x[i] > threshold
+    else:
+        threshold = filters.threshold_otsu(x)
+        binary = x > threshold
+    return binary

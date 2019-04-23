@@ -2,8 +2,8 @@ import numpy as np
 import cv2 as cv
 import os
 
-dir_chars = 'dataset\chars74k-lite'
-dir_texts = 'dataset\detection-images'
+dir_chars = 'dataset/chars74k-lite'
+dir_texts = 'dataset/detection-images'
 
 
 def load_data_chars():

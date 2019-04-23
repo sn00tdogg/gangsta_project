@@ -1,9 +1,10 @@
 import matplotlib.pyplot as plt
-import numpy as np
 
 from feature_extraction.data_processing import grey_scale, scale_input
 from feature_extraction.filters import add_gaussian_filter, add_bilateral_filter,\
-    add_median_filter, add_edge_detection_filter
+    add_median_filter, add_edge_detection_filter, add_otsu_filter
+
+from load_data import load_data_chars
 
 
 def plot_filters(x):
@@ -27,9 +28,9 @@ def plot_filters(x):
     ax[0, 1].axis('off')
     ax[0, 1].set_title('Edge detection filter', fontsize=10)
 
-    ax[0, 2].imshow(np.ones(img.shape)-img, cmap='gray')
+    ax[0, 2].imshow(add_otsu_filter(img), cmap='gray')
     ax[0, 2].axis('off')
-    ax[0, 2].set_title('Color inverted image', fontsize=10)
+    ax[0, 2].set_title('Otsu filter', fontsize=10)
 
     ax[1, 0].imshow(add_gaussian_filter(img), cmap='gray')
     ax[1, 0].axis('off')
@@ -45,3 +46,9 @@ def plot_filters(x):
 
     fig.tight_layout()
     plt.show()
+
+
+if __name__ == '__main__':
+    x, y = load_data_chars()
+    plot_filters(x[2])
+
