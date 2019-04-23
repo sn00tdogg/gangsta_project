@@ -1,12 +1,14 @@
 # gangsta_project
-## How to install requirements
+### How to install requirements
 Create an environment, activate and install requirements:
 ```bash
-conda create -n "name_of_environment" python=3.6
-conda activate "name_of_environment"
+conda create -n name_of_environment python=3.6
+conda activate name_of_environment
 pip install -r requirements.txt
 ```
-### Folder structure required to run the project without any modifications:
+
+### Folder structure
+This folder structure required to run the project without any modifications:
 
 ```bash
 |---- datasets  # Folder for data sets
@@ -29,4 +31,15 @@ pip install -r requirements.txt
 |---- plots.py
 |---- load_data.py
 |---- model_weights.hdf5
+```
+
+### Run code
+The code should be ran as modules, with the following calls in prompt:
+```bash
+python -m character_classification
+python -m models.CNN
+python -m models.SVM
+python -m models.KNN
+python -m models.Naive_Bayes
+python -m plots
 ```
