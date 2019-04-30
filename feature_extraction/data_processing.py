@@ -27,16 +27,16 @@ def remove_dimension(x):
 
 def add_pictures_without_chars(x, y):
     """Adds empty pictures without """
-    num = 100
+    num = 500
     new_x = np.zeros([x.shape[0]+num, x.shape[1], x.shape[2], x.shape[3]])
     new_y = np.zeros(len(y)+num)
     new_x[:x.shape[0]] = x
-    new_y[:y.shape[0]] = y
+    new_y[:y.shape[0]] = y+1
     for i in range(num):
         new_x[x.shape[0]+i] = np.zeros([x.shape[1], x.shape[2], x.shape[3]])
         for j in range(x.shape[1]):
             for k in range(x.shape[2]):
-                new_x[x.shape[0]+i, j, k, 0] = random.uniform(0.3, 0)
+                new_x[x.shape[0]+i, j, k, 0] = min(np.random.gamma(shape=0.8, scale=4, size=1), 1)
     return new_x, new_y
 
 

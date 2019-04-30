@@ -17,7 +17,7 @@ def svm(x, y):
     # x = add_edge_detection_filter(x)
     x = add_otsu_filter(x)
     x = remove_dimension(x)
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2,
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.01,
                                                         random_state=random_state,
                                                         stratify=y)
 
@@ -26,6 +26,7 @@ def svm(x, y):
     clf.fit(x_train, y_train)
     y_pred = clf.predict(x_test)
     print('Test accuracy: ', accuracy_score(y_test, y_pred))
+    return clf
 
 
 if __name__ == "__main__":

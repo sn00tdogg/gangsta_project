@@ -17,7 +17,7 @@ def character_classification():
     SVM.svm(x, y)
     Naive_Bayes.naive_bayes(x, y)
     KNN.knn(x, y)
-    CNN.fit_cnn(x, y, trials=1)
+    CNN.fit_cnn(x, y, trials=1, network_type='simple')
 
 
 if __name__ == "__main__":
