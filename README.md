@@ -34,7 +34,7 @@ This folder structure required to run the project without any modifications:
 ```
 
 ### Run code
-The code should be ran as modules, with the following calls in prompt:
+The code should be ran as modules, with the following calls in conda prompt:
 ```bash
 python -m character_classification
 python -m models.CNN
