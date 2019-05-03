@@ -1,4 +1,4 @@
-### Requirements ###
+### Requirements ###  # A list of python libraries needed to run the code system 
 #
 numpy
 keras
