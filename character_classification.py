@@ -4,7 +4,9 @@ from models import Naive_Bayes, SVM, CNN, KNN
 from load_data import load_data_chars
 import plots
 
-random.seed(100)
+#testkommentar for branching
+
+random.seed(100) 
 
 
 def character_classification():
