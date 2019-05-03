@@ -32,9 +32,9 @@ def add_pictures_without_chars(x, y):
     new_y = np.zeros(len(y)+num)
     new_x[:x.shape[0]] = x
     new_y[:y.shape[0]] = y+1
-    for i in range(num):
+    for i in range(num):    # Creates "num" number of blank images
         new_x[x.shape[0]+i] = np.zeros([x.shape[1], x.shape[2], x.shape[3]])
-        for j in range(x.shape[1]):
+        for j in range(x.shape[1]):         # In each pixel, apply a gamma distributed greyscale value
             for k in range(x.shape[2]):
                 new_x[x.shape[0]+i, j, k, 0] = min(np.random.gamma(shape=0.8, scale=4, size=1), 1)
     return new_x, new_y
